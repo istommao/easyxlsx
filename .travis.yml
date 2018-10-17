@@ -1,0 +1,15 @@
+language: python
+python:
+  - 2.7
+  - 3.4
+  - 3.5
+install:
+  - pip install codecov
+  - pip install easyxlsx
+before_script:
+  - pip install pytest-cov
+script:
+  - py.test --cov=easyxlsx
+
+after_success:
+  - codecov
