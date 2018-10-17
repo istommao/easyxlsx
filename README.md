@@ -39,15 +39,11 @@ class UserAdmin(admin.ModelAdmin):
 from easyxlsx import SimpleWriter
 
 
-class DemoWriter(SimpleWriter):
-
-    headers = ('编号', '姓名', '年龄')
-
 dataset = (
   [1, '无声', 25],
   [2, '星尘', 26],
   [3, '黎明', 27],
 )
 
-DemoWriter(dataset, bookname='demo.xlsx').export()
+SimpleWriter(dataset, headers=('编号', '姓名', '年龄'), bookname='demo.xlsx').export()
 ```

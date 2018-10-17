@@ -42,7 +42,7 @@ class BaseWriter(object):
     date_style = 'yyyy-m-d'
     rows_index = 0
 
-    def __init__(self, sources, bookname=None):
+    def __init__(self, sources, headers=None, bookname=None):
         """Init."""
         self.output = None
 
@@ -52,6 +52,7 @@ class BaseWriter(object):
             self.output = io.BytesIO()
             book = self.output
 
+        self.header_line = headers
         self.book = xlsxwriter.Workbook(book)
         self.sources = sources
 
@@ -83,7 +84,9 @@ class SimpleWriter(BaseWriter):
 
         headerfmt = self.formatmixin.headerfmt
 
-        for col, value in enumerate(self.headers):
+        headers = self.header_line or self.headers
+
+        for col, value in enumerate(headers):
             sheet.write(self.rows_index, col, value, headerfmt)
         self.rows_index += 1
 
