@@ -44,12 +44,16 @@ class BaseWriter(object):
 
     def __init__(self, sources, bookname=None):
         """Init."""
-        self.output = io.BytesIO()
+        self.output = None
 
-        self.bookname = bookname if bookname else 'excel.xls'
+        if bookname:
+            book = bookname
+        else:
+            self.output = io.BytesIO()
+            book = self.output
+
+        self.book = xlsxwriter.Workbook(book)
         self.sources = sources
-
-        self.book = xlsxwriter.Workbook(self.output)
 
         self.formatmixin = FormatMixin(self.book)
 
@@ -60,11 +64,13 @@ class BaseWriter(object):
     def close(self):
         """Close."""
         self.book.close()
-        self.output.seek(0)
 
-        iodata = self.output.read()
-        self.output.close()
-        return iodata
+        if self.output:
+            self.output.seek(0)
+
+            iodata = self.output.read()
+            self.output.close()
+            return iodata
 
 
 class SimpleWriter(BaseWriter):

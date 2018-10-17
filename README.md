@@ -1,7 +1,6 @@
 # easyxlsx
 easy way to use xlsxwriter
 
-
 ## Installation
 
 ```shell
@@ -32,4 +31,23 @@ class UserAdmin(admin.ModelAdmin):
         response = HttpResponse(data, content_type='application/vnd.ms-excel;charset=utf-8')
         response['Content-Disposition'] = 'attachment; filename="download.xls"'
         return response
+```
+
+`save excel`
+
+```python
+from easyxlsx import SimpleWriter
+
+
+class DemoWriter(SimpleWriter):
+
+    headers = ('编号', '姓名', '年龄')
+
+dataset = (
+  [1, '无声', 25],
+  [2, '星尘', 26],
+  [3, '黎明', 27],
+)
+
+DemoWriter(dataset, bookname='demo.xlsx').export()
 ```
