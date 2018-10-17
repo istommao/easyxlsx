@@ -1,3 +1,9 @@
+[![Build Status](https://travis-ci.org/istommao/easyxlsx.svg?branch=master)](https://travis-ci.org/istommao/easyxlsx)
+[![codecov](https://codecov.io/gh/istommao/easyxlsx/branch/master/graph/badge.svg)](https://codecov.io/gh/istommao/easyxlsx)
+[![PyPI](https://img.shields.io/pypi/v/easyxlsx.svg)](https://pypi.python.org/pypi/easyxlsx)
+[![PyPI](https://img.shields.io/pypi/pyversions/Django.svg?style=plastic)](https://pypi.python.org/pypi/easyxlsx)
+
+
 # easyxlsx
 easy way to use xlsxwriter
 
