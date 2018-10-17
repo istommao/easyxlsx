@@ -9,11 +9,11 @@
     :license: MIT, see LICENSE for more details.
 """
 
-from easyxlsx.base import BaseExport, ModelExport, FormatMixin
+from easyxlsx.base import BaseWriter, ModelWriter, FormatMixin
 
 
 __all__ = [
-    'BaseExport',
-    'ModelExport',
+    'BaseWriter',
+    'ModelWriter',
     'FormatMixin'
 ]

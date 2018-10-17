@@ -35,8 +35,8 @@ class FormatMixin(object):
         self.bodyfmt.set_align('vcenter')
 
 
-class BaseExport(object):
-    """BaseExport."""
+class BaseWriter(object):
+    """BaseWriter."""
 
     datetime_style = 'yyyy-m-d hh:mm:ss'
     date_style = 'yyyy-m-d'
@@ -67,9 +67,53 @@ class BaseExport(object):
         return iodata
 
 
-class ModelExport(BaseExport):
+class SimpleWriter(BaseWriter):
+    """Simple writer."""
+
+    move_rows = None
+    headers = ()
+
+    def write_header(self, sheet):
+
+        headerfmt = self.formatmixin.headerfmt
+
+        for col, value in enumerate(self.headers):
+            sheet.write(self.rows_index, col, value, headerfmt)
+        self.rows_index += 1
+
+    def export(self, sheet_name=None):
+        """Export."""
+        sheet = self.book.add_worksheet(sheet_name)
+
+        self.write_header(sheet)
+        self.write_dataset(sheet, self.sources)
+
+        return self.close()
+
+    def get_fmt(self, value):
+        """Get fmt."""
+        if isinstance(value, datetime.datetime):
+            datatimefmt = self.book.add_format(
+                {'num_format': self.datetime_style})
+            datatimefmt.set_align('center')
+            datatimefmt.set_align('vcenter')
+            return datatimefmt
+        else:
+            return self.formatmixin.bodyfmt
+
+    def write_dataset(self, sheet, dataset):
+        """Write dataset."""
+        for linedata in dataset:
+            self.move_rows = None
+            for col, value in enumerate(linedata):
+                sheet.write(self.rows_index, col, value, self.get_fmt(value))
+
+            self.rows_index += self.move_rows if self.move_rows else 1
+
+
+class ModelWriter(BaseWriter):
     """
-    :功能描述: ModelExport 根据 model导出
+    :功能描述: ModelWriter 根据 model导出
     """
 
     model = None
