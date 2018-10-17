@@ -13,3 +13,9 @@ clean-pyc:
 
 clean-build:
 	rm -rf build dist *.egg-info .eggs
+
+clean-pytest:
+	rm -rf .pytest_cache
+	rm test
+	rm .coverage
+

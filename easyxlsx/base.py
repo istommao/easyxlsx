@@ -1,3 +1,4 @@
+# coding: utf-8
 """easyxlsx base.py"""
 import io
 import datetime
