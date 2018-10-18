@@ -27,16 +27,12 @@ class UserWriter(ModelWriter):
     fields = ('username', 'gender', 'age', 'email', 'added_at')
 
 
-class UserAdmin(admin.ModelAdmin):
+def get(request):
+    data = UserWriter(queryset).export()
 
-    actions = ['writer_action']
-
-    def writer_action(self, request, queryset):
-        data = UserWriter(queryset).export()
-
-        response = HttpResponse(data, content_type='application/vnd.ms-excel;charset=utf-8')
-        response['Content-Disposition'] = 'attachment; filename="download.xls"'
-        return response
+    response = HttpResponse(data, content_type='application/vnd.ms-excel;charset=utf-8')
+    response['Content-Disposition'] = 'attachment; filename="download.xls"'
+    return response
 ```
 
 `save excel`
@@ -53,3 +49,6 @@ dataset = (
 
 SimpleWriter(dataset, headers=('编号', '姓名', '年龄'), bookname='demo.xlsx').export()
 ```
+
+![save excel](resources/screenshots.png)
+
