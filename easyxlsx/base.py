@@ -43,10 +43,9 @@ class BaseWriter(object):
     date_style = 'yyyy-m-d'
     rows_index = 0
 
-    def __init__(self, sources, headers=None, bookname=None, stream=False):
+    def __init__(self, sources, headers=None, bookname=None):
         """Init."""
         self.output = None
-        self.stream = stream
 
         if bookname:
             book = xlsxwriter.Workbook(bookname)
@@ -73,11 +72,7 @@ class BaseWriter(object):
             iodata = self.output.read()
 
             self.output.close()
-
-            if self.stream:
-                yield iodata
-            else:
-                return iodata
+            return iodata
 
     def __enter__(self):
         return self
@@ -134,6 +129,25 @@ class SimpleWriter(BaseWriter):
                 sheet.write(self.rows_index, col, value, self.get_fmt(value))
 
             self.rows_index += self.move_rows if self.move_rows else 1
+
+
+class StreamMixin(object):
+
+    def get_export_data(self):
+        """get_export_data."""
+        self.close_book()
+
+        if self.output:
+            self.output.seek(0)
+            iodata = self.output.read()
+
+            self.output.close()
+
+            yield iodata
+
+
+class StreamSimpleWriter(SimpleWriter, StreamMixin):
+    """Stream SimpleWriter."""
 
 
 class ModelWriter(BaseWriter):
@@ -218,3 +232,7 @@ class ModelWriter(BaseWriter):
                 value = self.fields_choices[field][value]
 
             sheet.write(self.rows_index, col, value, self.get_fmt(value))
+
+
+class StreamModelWriter(StreamMixin, ModelWriter):
+    """Stream Model writer."""

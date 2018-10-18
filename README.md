@@ -37,8 +37,15 @@ def download_excel(request):
 # use StreamingHttpResponse
 from django.http.response import StreamingHttpResponse
 
+from easyxlsx import StreamModelWriter
+
+class StreamUserWriter(StreamModelWriter):
+    model = User
+    fields = ('username', 'gender', 'age', 'email', 'added_at')
+
+
 def download_excel(request):
-    data = UserWriter(queryset, stream=True).export()
+    data = StreamUserWriter(queryset).export()
 
     response = StreamingHttpResponse(data, content_type='application/vnd.ms-excel;charset=utf-8')
     response['Content-Disposition'] = 'attachment; filename="download.xls"'
