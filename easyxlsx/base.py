@@ -43,9 +43,10 @@ class BaseWriter(object):
     date_style = 'yyyy-m-d'
     rows_index = 0
 
-    def __init__(self, sources, headers=None, bookname=None):
+    def __init__(self, sources, headers=None, bookname=None, stream=False):
         """Init."""
         self.output = None
+        self.stream = stream
 
         if bookname:
             book = xlsxwriter.Workbook(bookname)
@@ -72,7 +73,11 @@ class BaseWriter(object):
             iodata = self.output.read()
 
             self.output.close()
-            return iodata
+
+            if self.stream:
+                yield iodata
+            else:
+                return iodata
 
     def __enter__(self):
         return self

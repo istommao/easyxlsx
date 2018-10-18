@@ -27,10 +27,20 @@ class UserWriter(ModelWriter):
     fields = ('username', 'gender', 'age', 'email', 'added_at')
 
 
-def get(request):
+def download_excel(request):
     data = UserWriter(queryset).export()
 
     response = HttpResponse(data, content_type='application/vnd.ms-excel;charset=utf-8')
+    response['Content-Disposition'] = 'attachment; filename="download.xls"'
+    return response
+
+# use StreamingHttpResponse
+from django.http.response import StreamingHttpResponse
+
+def download_excel(request):
+    data = UserWriter(queryset, stream=True).export()
+
+    response = StreamingHttpResponse(data, content_type='application/vnd.ms-excel;charset=utf-8')
     response['Content-Disposition'] = 'attachment; filename="download.xls"'
     return response
 ```
