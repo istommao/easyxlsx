@@ -5,22 +5,33 @@ from __future__ import unicode_literals
 
 from unittest import TestCase
 
-import xlsxwriter
-
-from easyxlsx import FormatMixin
+from easyxlsx import SimpleWriter
 
 
-class FormatMixinTest(TestCase):
+class SimpleWriterTest(TestCase):
     """FormatMixin test."""
 
     def setUp(self):
-        """setUp."""
-        self.book = xlsxwriter.Workbook('test')
+        self.headers = ('编号', '姓名', '年龄')
 
-    def tearDown(self):
-        """tearDown."""
-        self.book.close()
+        dataset = (
+            [1, '无声', 25],
+            [2, '星尘', 26],
+            [3, '黎明', 27],
+        )
+        self.dataset = dataset
 
-    def test_formatmixin(self):
-        """Test formatmixin."""
-        formatmixn = FormatMixin(self.book)
+    def test_export(self):
+        writer = SimpleWriter(self.dataset, headers=self.headers)
+        data = writer.export()
+
+        self.assertTrue(isinstance(data, bytes))
+        self.assertNotEqual(data, b'')
+
+    def test_with_syntax(self):
+
+        with SimpleWriter(self.dataset, headers=self.headers) as writer:
+            data = writer.export()
+
+        self.assertTrue(isinstance(data, bytes))
+        self.assertNotEqual(data, b'')

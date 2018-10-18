@@ -48,13 +48,13 @@ class BaseWriter(object):
         self.output = None
 
         if bookname:
-            book = bookname
+            book = xlsxwriter.Workbook(bookname)
         else:
             self.output = io.BytesIO()
-            book = self.output
+            book = xlsxwriter.Workbook(self.output, {'in_memory': True})
 
         self.header_line = headers
-        self.book = xlsxwriter.Workbook(book)
+        self.book = book
         self.sources = sources
 
         self.formatmixin = FormatMixin(self.book)
@@ -63,16 +63,26 @@ class BaseWriter(object):
         """Export."""
         raise NotImplementedError('NotImplemented method export!')
 
-    def close(self):
-        """Close."""
-        self.book.close()
+    def get_export_data(self):
+        """get_export_data."""
+        self.close_book()
 
         if self.output:
             self.output.seek(0)
-
             iodata = self.output.read()
+
             self.output.close()
             return iodata
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *args):
+        self.close_book()
+
+    def close_book(self):
+        """Close."""
+        self.book.close()
 
 
 class SimpleWriter(BaseWriter):
@@ -98,7 +108,7 @@ class SimpleWriter(BaseWriter):
         self.write_header(sheet)
         self.write_dataset(sheet, self.sources)
 
-        return self.close()
+        return self.get_export_data()
 
     def get_fmt(self, value):
         """Get fmt."""
@@ -155,7 +165,7 @@ class ModelWriter(BaseWriter):
         self.write_header(sheet)
         self.write_dataset(sheet, self.sources)
 
-        return self.close()
+        return self.get_export_data()
 
     def get_fmt(self, value):
         """Get fmt."""
