@@ -9,12 +9,14 @@
     :license: MIT, see LICENSE for more details.
 """
 
-from easyxlsx.base import BaseWriter, ModelWriter, SimpleWriter, FormatMixin
+from easyxlsx.base import BaseWriter, ModelWriter, SimpleWriter, FormatMixin, StreamSimpleWriter, StreamModelWriter
 
 
 __all__ = [
     'BaseWriter',
     'SimpleWriter',
+    'StreamSimpleWriter',
     'ModelWriter',
+    'StreamModelWriter',
     'FormatMixin'
 ]

@@ -6,7 +6,7 @@ easyxlsx setup.py
 
 from setuptools import setup, find_packages
 
-__version__ = '0.3.8'
+__version__ = '0.3.9'
 
 INSTALL_REQUIRES = ['XlsxWriter>=1.1.1']
 
