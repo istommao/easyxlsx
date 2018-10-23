@@ -43,7 +43,7 @@ class BaseWriter(object):
     date_style = 'yyyy-m-d'
     rows_index = 0
 
-    def __init__(self, sources, headers=None, bookname=None):
+    def __init__(self, sources, headers=None, bookname=None, fields=None):
         """Init."""
         self.output = None
 
@@ -56,6 +56,7 @@ class BaseWriter(object):
         self.header_line = headers
         self.book = book
         self.sources = sources
+        self._fields = fields
 
         self.formatmixin = FormatMixin(self.book)
 
@@ -167,7 +168,9 @@ class ModelWriter(BaseWriter):
 
         headerfmt = self.formatmixin.headerfmt
 
-        for col, field in enumerate(self.fields):
+        fields = self._fields or self.fields
+
+        for col, field in enumerate(fields):
             if field in self.headers:
                 value = self.headers[field]
             else:
@@ -199,9 +202,11 @@ class ModelWriter(BaseWriter):
 
     def write_dataset(self, sheet, dataset):
         """Write dataset."""
+        fields = self._fields or self.fields
+
         for obj in dataset:
             self.move_rows = None
-            for col, field in enumerate(self.fields):
+            for col, field in enumerate(fields):
 
                 if hasattr(self, field):
                     value = getattr(self, field)(obj)
