@@ -53,7 +53,7 @@ class BaseWriter(object):
             self.output = io.BytesIO()
             book = xlsxwriter.Workbook(self.output, {'in_memory': True})
 
-        self.header_line = headers
+        self._header_line = headers
         self.book = book
         self.sources = sources
         self._fields = fields
@@ -96,7 +96,7 @@ class SimpleWriter(BaseWriter):
 
         headerfmt = self.formatmixin.headerfmt
 
-        headers = self.header_line or self.headers
+        headers = self._header_line or self.headers
 
         for col, value in enumerate(headers):
             sheet.write(self.rows_index, col, value, headerfmt)
@@ -167,12 +167,13 @@ class ModelWriter(BaseWriter):
         model = self.model
 
         headerfmt = self.formatmixin.headerfmt
+        headers = self._header_line or self.headers
 
         fields = self._fields or self.fields
 
         for col, field in enumerate(fields):
-            if field in self.headers:
-                value = self.headers[field]
+            if field in headers:
+                value = headers[field]
             else:
                 value = model._meta.get_field(
                     field).verbose_name.title()    # pylint: disable=W0212
